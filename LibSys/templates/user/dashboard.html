@@ -1,0 +1,88 @@
+
+
+{% block content %}
+<head>
+    {% if request.user.is_superuser %}
+        <a href="{% url 'manage_books' %}"><button style="background-color: #336095;">Manage Books</button></a>
+    {% endif %}
+    <a href="{% url 'issued_books' %}"><button>Issueance History</button></a>
+</head>
+<body>
+  <div class="container">
+    <h1>Hello, {{ request.user|title }}</h1>
+
+    <div class="logout">
+      <a href="{% url 'logout' %}"><button style="background-color: #336095;">Logout</button></a>
+    </div>
+
+    
+    <h3>Available Books</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Available</th>
+                <th>Actions</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+          {% for book in available_books %}
+              <tr>
+                  <td>{{ book.Bid }}</td>
+                  <td>{{ book.book_name }}</td>
+                  <td>{{ book.available_quantity }}</td>
+                  <td>
+                      {% if issued_books.book.bid == book.bid and issued_books.submit == False %}
+                          Please return the book before issuing again.
+                      {% else %}
+                          <a href="{% url 'issue_book' pk=book.pk %}">Issue</a>
+                      {% endif %}
+                  </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+    </table>    
+
+    
+
+  </div>
+  <div>
+    
+  <h3>Currently Issued Books</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>IssueNo</th>
+                <th>Book</th>
+                <th>Issued To</th>
+                <th>Time since Issue <br> (Max 10 days before Fine)</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for issued_book in issued_books %}
+                {% if issued_book.user == request.user %}
+                    {%if issued_book.submit == False %}
+                        <tr>
+                        
+                            <td>{{ issued_book.Issue_No }}</td>
+                            <td>{{ issued_book.book.book_name }}</td>
+                            <td>{{ issued_book.user }}</td>
+                            <td>{{ issued_book.create|timesince }} ago</td>
+                            <td>{% if issued_book.submit %}Returned{% else %}Not Returned{% endif %}</td>
+                            <td>{% if issued_book.submit %} {% else %}<a href="{% url 'return_book' pk=issued_book.pk %}">return</a>{% endif %}</td>
+                        
+                        </tr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    
+  </div>
+</body>
+
+{% endblock content %}

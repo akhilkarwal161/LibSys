@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #fff;
+}
+
+header {
+  background-color: #336095;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+nav {
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: #336095;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+section {
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+}
+
+footer {
+  background-color: #336095;
+  padding: 20px;
+  text-align: center;
+}
+
+</style>
+
+<head>
+<title>Library Management System</title>
+</head>
+<body>
+<header>
+<h1>Library Management System</h1>
+</header>
+<nav>
+<ul>
+
+<div class="loginout">
+    {% if request.user.is_authenticated%}
+    <a href="{% url 'logout' %}"><button class="loginout">logout</button></a>
+    <a href="{% url 'dashboard' %}"><button style="background-color: #336095;">Dashboard</button></a>
+    {%else%}
+    <a href="{% url 'login' %}"><button class="loginout">login</button></a>
+    {%endif%}
+</div>
+</ul>
+</nav>
+<section>
+<h2>Welcome</h2>
+<p>This is the Library Management System. You can use this system to manage your library books and members.</p>
+</section>
+<footer>
+<p>Copyright &copy; 2023 Library Management System</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+
+{% block content %}
+<h2>Issued Books History</h2>
+<a href="{% url 'dashboard' %}"><button>dashboard</button></a>
+
+{% if issued_books %}
+<table border = "1">
+  <thead>
+    <tr>
+      <th>Issue No.</th>
+      <th>Book Name</th>
+      <th>length_of_possession</th>
+      <th>Fine</th>
+    
+      <th>Note</th>
+     
+    </tr>
+  </thead>
+  <tbody>
+    {% for issued_book in issued_books %}
+      <tr>
+        <td>{{ issued_book.Issue_No }}</td>
+        <td>{{ issued_book.book.book_name }}</td>
+        <td>{{ issued_book.create|timesince }}</td>
+        <td>{{ issued_book.book.fine }}</td>
+        {%if issued_book.submit == False %}
+        <td>Not Returned</td>
+        {%endif%}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>No Issued Books</p>
+{% endif %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,23 @@
+
+{% block content %}
+<h1>Issue Book</h1>
+
+{% if book %}
+    <p>Are you sure you want to issue the book: <strong>{{ book.book_name }}</strong> by <strong>{{ book.author }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Issue Book</button>
+    </form>
+{% else %}
+    <p>Book not found!</p>
+{% endif %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}

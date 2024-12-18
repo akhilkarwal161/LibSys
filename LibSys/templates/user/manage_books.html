@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Books</title>
+    <a href="{% url 'dashboard' %}"><button>dashboard</button></a>
+</head>
+<body>
+    <h2>Manage Books</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="book_name">Book Name:</label>
+        <input type="text" name="book_name" required><br><br>
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" required><br><br>
+        <label for="author">Author:</label>
+        <input type="text" name="author" required><br><br>
+        <label for="genre">Genre:</label>
+        <input type="text" name="genre"><br><br>
+        <label for="fine">Fine:</label>
+        <input type="number" name="fine" required><br><br>
+        <button type="submit" name="add_book">Add Book</button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="book_id">Book ID:</label>
+        <select name="book_id">
+            {% for book in books %}
+                <option value="{{ book.Bid }}">{{ book.Bid }} : {{ book.book_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="remove_book">Remove Book</button>
+    </form>
+
+    <h3>Available Books</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in available_books %}
+                <tr>
+                    <td>{{ book.Bid }}</td>
+                    <td>{{ book.book_name }}</td>
+                    <td>{{ book.quantity }}</td>
+                    <td>{{ book.available_quantity }}</td>
+                    <td><a href="{% url 'edit_book' pk=book.pk %}">Edit</a></td> 
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+   
+
+    <div>
+     <h3>Issued Books</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Issued To</th>
+          <th>Possesion Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for issued_book in issued_books %}
+          <tr>
+            <td>{{ issued_book.book.book_name }}</td>
+            <td>{{ issued_book.user }}</td>
+            <td>{{ issued_book.create|timesince }}</td>
+            <td>{% if issued_book.submit %}Returned{% else %}Not Returned{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    </div>
+
+</body>
+</html>
