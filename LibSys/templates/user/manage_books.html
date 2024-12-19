@@ -1,10 +1,91 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+      
+      table, th, td {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+      
+      th, td {
+            padding: 10px;
+            text-align: left;
+            background-color: #f9f9f9;
+        }
+      
+      th {
+            background-color: #336095;
+            color: white;
+        }
+      form,h3,h1 {
+            padding: 20px;
+            background-color: #336095;
+            margin: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            top: 1%;
+            width: 25%;
+               }
+      .floating-button {
+                position: fixed;
+                top: 10px; /* Adjust distance from top */
+                right:  10px; /* Adjust distance from right */
+                background-color:rgb(234, 82, 31); /* Blue */
+                color: white;
+                padding: 15px 20px;
+                border-radius: 70%; /* Make it round */
+                text-decoration: none;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+                z-index: 1000; /* Ensure it's on top */
+              }
+      .floating-button2 {
+                position: fixed;
+                top: 10px; /* Adjust distance from top */
+                left:  10px; /* Adjust distance from right */
+                background-color:rgb(234, 82, 31); /* Blue */
+                color: white;
+                padding: 15px 20px;
+                border-radius: 70%; /* Make it round */
+                text-decoration: none;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+                z-index: 1000; /* Ensure it's on top */
+              }
+      .floating-button3 {
+                position: fixed;
+                top: 100px; /* Adjust distance from top */
+                right:  10px; /* Adjust distance from right */
+                background-color:rgb(234, 82, 31); /* Blue */
+                color: white;
+                padding: 15px 20px;
+                border-radius: 70%; /* Make it round */
+                text-decoration: none;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+                z-index: 1000; /* Ensure it's on top */
+              }
+h2 {text-align: center;
+     color: #336095;
+     font-size: 40px;
+      background-color: #ddd;
+      padding: auto;
+       border-radius: 30%;}
+              
+      
+      </style>
+      {% load static %}
+      <link rel="stylesheet" href="{% static 'style.css' %}">
 <head>
     <title>Manage Books</title>
-    <a href="{% url 'dashboard' %}"><button>dashboard</button></a>
+    <br>
+    <a class="floating-button" href="{% url 'dashboard' %}">dashboard</a>
+    <br>
 </head>
-<body>
+<body style="overflow: scroll;">
     <h2>Manage Books</h2>
 
     <form method="post">
@@ -33,7 +114,7 @@
         <button type="submit" name="remove_book">Remove Book</button>
     </form>
 
-    <h3>Available Books</h3>
+    <h3>Available Books</h3><br>
     <table>
         <thead>
             <tr>
@@ -60,7 +141,7 @@
    
 
     <div>
-     <h3>Issued Books</h3>
+     <h3>Issued Books</h3><br>
     <table>
       <thead>
         <tr>

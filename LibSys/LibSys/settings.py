@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-v3$94vx20r$_i%(hpk91%=5sh3f)84ulsfx_q3(ydzbg67$4y%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','127.0.0.1','0.0.0.0']
 
 
 # Application definition
@@ -145,6 +145,9 @@ CSRF_FAILURE_VIEW = 'Home.views.csrf_failure'  # Replace 'Home.views.home' with 
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

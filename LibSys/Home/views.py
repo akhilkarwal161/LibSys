@@ -213,3 +213,14 @@ def issued_books_view(request):
         'all_users': User.objects.all(),
     }
     return render(request, 'your_template.html', context)
+
+def stock(request):
+    books = Books.objects.all()
+    return render(request, 'etc/books.html', {'books': books})
+
+def members(request):
+    users = User.objects.all()
+    return render(request, 'etc/members.html', {'users': users})
+
+def contacts(request):
+    return render(request, 'etc/contacts.html')

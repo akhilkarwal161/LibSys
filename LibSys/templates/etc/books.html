@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Books</title>
+    <style>
+        body {
+            background-image: url("https://plus.unsplash.com/premium_photo-1677567996070-68fa4181775a?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+            background-size: cover;
+            font-family: sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #336095;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        section {
+            padding: 20px;
+            margin: 20px;
+            border-radius: 5px;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVsAAACRCAMAAABaFeu5AAAAElBMVEV+xv97xv94x/9zxPx8x/91xv4RbxmEAAABJklEQVR4nO3V0W6CQBBAUbD2/3+50QSyxV3a2F1moOc8GBgTnb1qnCYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Gru0QvsucfptH6PlxkjsO0fNNYP7Fgz15Ubl3ffnwmzrt8Y5/CrtnPlMtS6fmOcQ6Ntmbi4fg0fY12/Mc7hnbbl1zgm9Lp+Y5zDW22XoNru2m+bVWP9wI41MW3+BW3H0XYcbcc5pO2teEzgqEV6tr0ttve3zW20jmfeM7Dt9jDHN2zpeOY9U/Q5r0nbgZ5tP9ui9zszbce5VNtEf5UPl2qbbNuf2p7Behhtu1vOkuxXNl+hbWbTx3DP96mMCrXZ+Wk7Tkzbs0jf9njdPk1tX2mbn7ZZaTvOFwCFZd5Kyns4AAAAAElFTkSuQmCC");
+            color: rgb(0, 0, 0);
+            box-shadow: 0 0 10px rgb(255, 255, 255);
+            width: fit-content;
+            position: relative;
+            top: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            background-color: #f9f9f9;
+        }
+
+        th {
+            background-color: #336095;
+            color: white;
+        }
+
+        footer {
+            background-color: #336095;
+            color: rgb(145, 199, 208);
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            padding: auto;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+        }
+        .floating-button {
+            position: fixed;
+            top: 10px; /* Adjust distance from top */
+            left: 10px; /* Adjust distance from left */
+            background-color: #336095; /* Blue */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%; /* Make it round */
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+            z-index: 1000; /* Ensure it's on top */
+          }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'home' %}" class="floating-button">Go Back</a>
+        <h1>Available Books</h1>
+    </header>
+
+    <section>
+        <h2>Our Collection</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.book_name }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.genre }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <footer >
+        <p>&copy; 2024 Library Management System</p>
+    </footer>
+</body>
+</html>

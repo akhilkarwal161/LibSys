@@ -1,23 +1,91 @@
 
-
+{% load static %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
 {% block content %}
+<style>
+    body {
+        overflow:auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+table, th, td {
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+
+th, td {
+        padding: 10px;
+        text-align: left;
+        background-color: #f9f9f9;
+    }
+
+th {
+        background-color: #336095;
+        color: white;
+    }
+section,h3 {
+        padding: 20px;
+        background-color: #336095;
+        margin: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        top: 50%;
+           }
+.floating-button2 {
+            position: fixed;
+            top: 10px; /* Adjust distance from top */
+            left:  10px; /* Adjust distance from right */
+            background-color:rgb(234, 82, 31); /* Blue */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%; /* Make it round */
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+            z-index: 1000; /* Ensure it's on top */
+          }
+.floating-button3 {
+            position: fixed;
+            top: 100px; /* Adjust distance from top */
+            right:  10px; /* Adjust distance from right */
+            background-color:rgb(234, 82, 31); /* Blue */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%; /* Make it round */
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+            z-index: 1000; /* Ensure it's on top */
+          }
+          
+
+</style>
+<div>
 <head>
     {% if request.user.is_superuser %}
-        <a href="{% url 'manage_books' %}"><button style="background-color: #336095;">Manage Books</button></a>
+        <a class="floating-button" href="{% url 'manage_books' %}">Manage Books</a>
     {% endif %}
-    <a href="{% url 'issued_books' %}"><button>Issueance History</button></a>
+    <a class='floating-button2' href="{% url 'issued_books' %}">Issueance History</a>
 </head>
+</div>
+<br><br>
+<div>
 <body>
   <div class="container">
-    <h1>Hello, {{ request.user|title }}</h1>
+    <h1 style="text-align: center; color: #336095; background-color: #ddd; border-radius: 50%;">Hello, {{ request.user|title }}</h1>
 
     <div class="logout">
-      <a href="{% url 'logout' %}"><button style="background-color: #336095;">Logout</button></a>
+        <br>
+      <a class="floating-button3" href="{% url 'logout' %}">Logout</a>
+    <br>
     </div>
 
     
     <h3>Available Books</h3>
-    <table>
+    <table border>
         <thead>
             <tr>
                 <th>ID</th>
@@ -84,5 +152,6 @@
     
   </div>
 </body>
+</div>
 
 {% endblock content %}

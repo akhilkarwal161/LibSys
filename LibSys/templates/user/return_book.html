@@ -1,24 +1,104 @@
 {% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+  
+  table, th, td {
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+  
+  th, td {
+        padding: 10px;
+        text-align: left;
+        background-color: #f9f9f9;
+    }
+  
+  th {
+        background-color: #336095;
+        color: white;
+    }
+  form,h3,h1,.form {
+        padding: 20px;
+        background-color: #336095;
+        margin: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        top: 1%;
+        width: 35%;
+           }
+  .floating-button {
+            position: fixed;
+            top: 10px; /* Adjust distance from top */
+            right:  10px; /* Adjust distance from right */
+            background-color:rgb(234, 82, 31); /* Blue */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%; /* Make it round */
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+            z-index: 1000; /* Ensure it's on top */
+          }
+  .floating-button2 {
+            position: fixed;
+            top: 10px; /* Adjust distance from top */
+            left:  10px; /* Adjust distance from right */
+            background-color:rgb(234, 82, 31); /* Blue */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%; /* Make it round */
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+            z-index: 1000; /* Ensure it's on top */
+          }
+  .floating-button3 {
+            position: fixed;
+            top: 100px; /* Adjust distance from top */
+            right:  10px; /* Adjust distance from right */
+            background-color:rgb(234, 82, 31); /* Blue */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%; /* Make it round */
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+            z-index: 1000; /* Ensure it's on top */
+          }
+h2 {text-align: center;
+ color: #336095;
+ font-size: 40px;
+  background-color: #ddd;
+  padding: auto;
+   border-radius: 30%;}
+          
+  
+  </style>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 
 <h2>Return Book</h2>
-
+<div class="form">
 {% if issued_book %}
     <p>Are you sure you want to return the following book?</p>
     <p><strong>Book Name:</strong> {{ issued_book.book.book_name }}</p>
     <p><strong>Issued To:</strong> {{ issued_book.user.username }}</p>
     <p><strong>Issued On:</strong> {{ issued_book.create }}</p>
     {% if available_quantity %}
-    <p><strong>Available Quantity after return:</strong> {{ available_quantity }}</p>
+    <p><strong>Available Quantity after return:</strong> {{ available_quantity|add:"1" }}</p>
     {% endif %}
 
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Confirm Return</button>
-        <a href="{% url 'issued_books' %}" class="btn btn-secondary">Cancel</a> 
+        <br>
+        <a href="{% url 'issued_books' %}" class="btn btn-secondary" style='background-color: rgb(234, 82, 31);'>Cancel</a> 
     </form>
 {% else %}
     <p>Invalid issued book ID.</p>
     <a href="{% url 'issued_books' %}" class="btn btn-secondary">Back to Issued Books</a>
 {% endif %}
-
+</div>
 {% endblock %}

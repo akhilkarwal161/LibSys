@@ -18,6 +18,9 @@ urlpatterns = [
     path('dashboard/', views.All_Books, name='All_Books'),
     path('issued_books/', views.issued_books, name='issued_books'),
     path('return_book/<int:pk>/', views.BookReturn, name='return_book'),
+    path('Stock/', views.stock, name='books'),
+    path('members/', views.members, name='members'),
+    path('contacts/', views.contacts, name='contacts'),
 
 
 ]

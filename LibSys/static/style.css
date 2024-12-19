@@ -1,0 +1,128 @@
+
+body {
+        background-image: url("https://plus.unsplash.com/premium_photo-1677567996070-68fa4181775a?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+        background-size: cover;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+    }
+
+header {
+        background-color: #336095;
+        color:rgb(145, 199, 208);
+        padding: 20px;
+        text-align: center;
+    }
+
+nav {
+        background-color:rgb(30, 27, 126);
+        padding: 10px 20px;
+    }
+
+.nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+.nav-links {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+    }
+
+.nav-links li {
+        margin-right: 15px;
+    }
+
+.nav-links a {
+        text-decoration: none;
+        color: rgb(145, 199, 208);
+        font-weight: bold;
+        padding: 5px 10px;
+        transition: color 0.3s;
+    }
+
+.nav-links a:hover {
+        color: #ffffff;
+        background-color:rgb(6, 4, 65);
+        border-radius: 5px;
+    }
+
+section,h3 {
+        padding: 20px;
+        background-color: #336095;
+        margin: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        top: 50px;
+    }
+
+footer {
+        background-color: #336095;
+        color: rgb(145, 199, 208);
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        padding: auto;
+        width: 100%;
+        text-align: center;
+        z-index: 1000;
+    }
+.floating-button {
+        position: fixed;
+        top: 10px; /* Adjust distance from top */
+        right:  10px; /* Adjust distance from right */
+        background-color:rgb(234, 82, 31); /* Blue */
+        color: white;
+        padding: 15px 20px;
+        border-radius: 70%; /* Make it round */
+        text-decoration: none;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+        z-index: 1000; /* Ensure it's on top */
+      }
+.floating-button2 {
+        position: fixed;
+        top: 10px; /* Adjust distance from top */
+        left:  10px; /* Adjust distance from right */
+        background-color:rgb(234, 82, 31); /* Blue */
+        color: white;
+        padding: 15px 20px;
+        border-radius: 70%; /* Make it round */
+        text-decoration: none;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+        z-index: 1000; /* Ensure it's on top */
+      }
+table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+table, th, td {
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+
+th, td {
+        padding: 10px;
+        text-align: left;
+        background-color: #f9f9f9;
+    }
+
+th {
+        background-color: #336095;
+        color: white;
+    }
+.admin-button {
+        text-decoration: none;
+        background-color: #336095;
+        color: rgb(145, 199, 208);
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }

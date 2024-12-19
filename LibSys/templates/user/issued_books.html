@@ -1,7 +1,77 @@
 
 {% block content %}
+<style>
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+  }
+
+table, th, td {
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+  }
+
+th, td {
+      padding: 10px;
+      text-align: left;
+      background-color: #f9f9f9;
+  }
+
+th {
+      background-color: #336095;
+      color: white;
+  }
+section,h3 {
+      padding: 20px;
+      background-color: #336095;
+      margin: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      top: 50%;
+         }
+.floating-button {
+          position: fixed;
+          top: 10px; /* Adjust distance from top */
+          right:  10px; /* Adjust distance from right */
+          background-color:rgb(234, 82, 31); /* Blue */
+          color: white;
+          padding: 15px 20px;
+          border-radius: 70%; /* Make it round */
+          text-decoration: none;
+          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+          z-index: 1000; /* Ensure it's on top */
+        }
+.floating-button2 {
+          position: fixed;
+          top: 10px; /* Adjust distance from top */
+          left:  10px; /* Adjust distance from right */
+          background-color:rgb(234, 82, 31); /* Blue */
+          color: white;
+          padding: 15px 20px;
+          border-radius: 70%; /* Make it round */
+          text-decoration: none;
+          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+          z-index: 1000; /* Ensure it's on top */
+        }
+.floating-button3 {
+          position: fixed;
+          top: 100px; /* Adjust distance from top */
+          right:  10px; /* Adjust distance from right */
+          background-color:rgb(234, 82, 31); /* Blue */
+          color: white;
+          padding: 15px 20px;
+          border-radius: 70%; /* Make it round */
+          text-decoration: none;
+          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+          z-index: 1000; /* Ensure it's on top */
+        }
+        
+
+</style>
 <h2>Issued Books History</h2>
-<a href="{% url 'dashboard' %}"><button>dashboard</button></a>
+<a class="floating-button" href="{% url 'dashboard' %}">dashboard</a><br><br>
 
 {% if issued_books %}
 <table border = "1">
