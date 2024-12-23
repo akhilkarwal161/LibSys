@@ -5,8 +5,10 @@ from django.views.generic import RedirectView
 from .views import *
 from django.contrib.auth.views import LogoutView
 from django.contrib import messages
+from django.urls import include
 
 urlpatterns = [
+    path('api/', include('Home.api.urls')),
     path('', views.Home, name='home'),
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', CustomlogoutView.as_view(next_page='login'), name='logout'),
@@ -21,6 +23,7 @@ urlpatterns = [
     path('Stock/', views.stock, name='books'),
     path('members/', views.members, name='members'),
     path('contacts/', views.contacts, name='contacts'),
+
 
 
 ]

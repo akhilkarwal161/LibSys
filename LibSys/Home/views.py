@@ -1,3 +1,4 @@
+from codecs import lookup
 from django.shortcuts import render, redirect
 from django.views.generic import FormView, View
 from django.contrib.auth.forms import UserCreationForm
@@ -14,6 +15,11 @@ from django.urls import reverse_lazy
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from rest_framework import generics
+from .api.serializers import *
+from rest_framework.response import Response
+from rest_framework.views import APIView
+import json
 available_books = []
 issued_books = []
 def Home(request):
@@ -224,3 +230,6 @@ def members(request):
 
 def contacts(request):
     return render(request, 'etc/contacts.html')
+
+
+

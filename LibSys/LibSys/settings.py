@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-v3$94vx20r$_i%(hpk91%=5sh3f)84ulsfx_q3(ydzbg67$4y%
 DEBUG = True
 
 ALLOWED_HOSTS = ['*','127.0.0.1','0.0.0.0']
+csrf_trusted_origins = ['*','127.0.0.1','0.0.0.0'] 
 
 
 # Application definition
@@ -38,8 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'Home',
+    'Home.api',
     'django.contrib.staticfiles',
     "debug_toolbar",
+    'rest_framework.authtoken',
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +59,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'LibSys.urls'
-APP_URLCONF = 'Home.urls'
+APP_URLCONF = [
+    'Home.urls','Home.api.urls'
+]
 
 TEMPLATES = [
     {
