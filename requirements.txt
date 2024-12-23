@@ -18,7 +18,6 @@ marshmallow
 multidict
 packaging
 pluggy
-propcache
 pytest
 python-dotenv
 sqlparse
