@@ -12,7 +12,6 @@ djangorestframework
 environs
 exceptiongroup
 frozenlist
-github
 idna
 iniconfig
 marshmallow
