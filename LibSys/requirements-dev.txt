@@ -1,0 +1,6 @@
+# This file is for development-specific packages.
+# It includes the base production requirements.
+-r requirements.txt
+
+django-debug-toolbar==4.4.6
+pytest==8.3.4

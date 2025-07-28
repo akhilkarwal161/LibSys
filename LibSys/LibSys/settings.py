@@ -12,22 +12,26 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from templates import *
+import environs # type: ignore
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# --- Environment Variables Setup ---
+env = environs.Env()
+# In production on Cloud Run, variables are set in the environment.
+# This will read a .env file if it exists, which is useful for local development.
+env.read_env(os.path.join(BASE_DIR, ".env"), recurse=False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v3$94vx20r$_i%(hpk91%=5sh3f)84ulsfx_q3(ydzbg67$4y%'
-
+SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*','127.0.0.1','0.0.0.0']
-csrf_trusted_origins = ['*','127.0.0.1','0.0.0.0'] 
+DEBUG = env.bool("DEBUG", default=False)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 
 # Application definition
@@ -39,29 +43,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'Home',
-    'Home.api',
     'django.contrib.staticfiles',
-    "debug_toolbar",
     'rest_framework.authtoken',
     'rest_framework',
     'django_filters',
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Add WhiteNoise middleware
     'django.middleware.csrf.CsrfViewMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# The debug toolbar should only be enabled in debug mode
+if DEBUG:
+    # Insert after CsrfViewMiddleware
+    MIDDLEWARE.insert(4, "debug_toolbar.middleware.DebugToolbarMiddleware")
+
 ROOT_URLCONF = 'LibSys.urls'
-APP_URLCONF = [
-    'Home.urls','Home.api.urls'
-]
 
 TEMPLATES = [
     {
@@ -85,12 +92,29 @@ WSGI_APPLICATION = 'LibSys.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    # Use SQLite for local development for simplicity
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    # Use PostgreSQL for production
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env.str('POSTGRES_DB'),
+            'USER': env.str('POSTGRES_USER'),
+            'PASSWORD': env.str('POSTGRES_PASSWORD'),
+            # For Google Cloud SQL, it's recommended to use the Unix socket for connections.
+            # The 'HOST' will be the path to the socket, e.g., '/cloudsql/your-instance-connection-name'
+            'HOST': env.str('DATABASE_HOST'), # e.g., /cloudsql/project:region:instance
+            'PORT': env.int('DATABASE_PORT', default=5432), # Port is ignored when using a Unix socket.
+        }
+    }
+
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.history.HistoryPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
@@ -125,11 +149,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+# This setting is for Django Debug Toolbar.
+# To make it work inside Docker, we need to dynamically find the container's network gateway.
+if DEBUG:
+    import socket
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1"]
+else:
+    INTERNAL_IPS = []
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -152,9 +179,16 @@ CSRF_FAILURE_VIEW = 'Home.views.csrf_failure'  # Replace 'Home.views.home' with 
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles' # Directory where collectstatic will gather files
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# Use WhiteNoise for static file storage in production
+if not DEBUG:
+    STORAGES = {
+        "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
