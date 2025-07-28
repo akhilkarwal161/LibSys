@@ -8,7 +8,7 @@ Dockerfile
 
 # Environment
 .env
-venv/
+.venv/
 
 # Python
 __pycache__/

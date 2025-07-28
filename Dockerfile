@@ -4,8 +4,8 @@ FROM python:3.11-slim
 # Set environment variables
 # 1. Prevents Python from buffering stdout and stderr
 # 2. Prevents Python from writing .pyc files
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Set the working directory in the container
 WORKDIR /app
@@ -22,6 +22,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application's code into the container
 COPY . .
+
+# Set the working directory to the Django project root inside the container
+WORKDIR /app/LibSys
 
 # Run collectstatic to gather all static files for WhiteNoise to serve
 RUN python manage.py collectstatic --noinput
