@@ -1,30 +1,39 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.13-slim-bookworm
 
-# Set environment variables
-# 1. Prevents Python from buffering stdout and stderr
-# 2. Prevents Python from writing .pyc files
+# Update system packages to address vulnerabilities
+RUN apt-get update && apt-get upgrade -y && apt-get clean
+
+# Set environment variables for non-interactive commands
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies that might be needed by Python packages.
-# For psycopg2, using psycopg2-binary in requirements.txt is often easier
-# as it avoids needing to install postgresql-client and build tools.
-# RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client
-
 # Install Python dependencies
-# Copying requirements.txt first leverages Docker's layer caching.
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Gunicorn and other production-specific dependencies
+RUN pip install gunicorn
 
 # Copy the rest of the application's code into the container
 COPY . .
 
 # Set the working directory to the Django project root inside the container
 WORKDIR /app/LibSys
+
+# Set production-specific environment variables for the container
+# Replace these values with your actual production settings.
+# For Cloud Run, you can set these in the console or with the gcloud CLI.
+# This Dockerfile includes them as defaults for demonstration.
+ENV DJANGO_DEBUG=False
+ENV ALLOWED_HOSTS=libsys-xvhbgr5zoq-as.a.run.app
+ENV CSRF_TRUSTED_ORIGINS=https://libsys-xvhbgr5zoq-as.a.run.app
+
+# Replace with your production database URL from Cloud SQL
+# You should get this value from your GCP environment, not hard-code it.
+#ENV DATABASE_URL=
 
 # Run collectstatic to gather all static files for WhiteNoise to serve
 RUN python manage.py collectstatic --noinput
