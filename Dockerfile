@@ -28,8 +28,8 @@ WORKDIR /app/LibSys
 # For Cloud Run, you can set these in the console or with the gcloud CLI.
 # This Dockerfile includes them as defaults for demonstration.
 ENV DJANGO_DEBUG=False
-ENV ALLOWED_HOSTS=libsys-xvhbgr5zoq-as.a.run.app
-ENV CSRF_TRUSTED_ORIGINS=https://libsys-xvhbgr5zoq-as.a.run.app
+ENV ALLOWED_HOSTS=libsys-xvhbgr5zoq-as.a.run.app,*
+ENV CSRF_TRUSTED_ORIGINS=*
 
 # Replace with your production database URL from Cloud SQL
 # You should get this value from your GCP environment, not hard-code it.
