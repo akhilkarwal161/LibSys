@@ -33,3 +33,6 @@ venv/
 .env
 .env.*
 ! .env.example
+
+#data
+.sqlite3
