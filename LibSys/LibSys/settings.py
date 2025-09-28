@@ -94,12 +94,15 @@ WSGI_APPLICATION = 'LibSys.wsgi.application'
 
 # Database
 # Use SQLite for local development and Cloud SQL in production
-DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ.get('DATABASE_URL', 'sqlite:///' +
-                       str(BASE_DIR / 'db.sqlite3'))
-    )
-}
+DATABASES = {                                                                                                                                                                                                   │
+     'default': dj_database_url.parse(                                                                                                                                                                           │
+         os.environ.get('DATABASE_URL', 'sqlite:///' +                                                                                                                                                           │
+                       str(BASE_DIR / 'db.sqlite3'))                                                                                                                                                            │
+                       str(BASE_DIR / 'db.sqlite3')),                                                                                                                                                           │
+         'USER': 'managedb',                                                                                                                                                                                     │
+        'PASSWORD': 'Mahesh@2018'                                                                                                                                                                               │
+     )                                                                                                                                                                                                           │
+ } 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -179,3 +182,4 @@ if not DEBUG:
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
