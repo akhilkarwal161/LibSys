@@ -1,7 +1,14 @@
 FROM python:3.13-slim-bookworm
 
 # Update system packages to address vulnerabilities
-RUN apt-get update && apt-get upgrade -y && apt-get clean
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    default-libmysqlclient-dev \
+    pkg-config \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 
 # Set environment variables for non-interactive commands
 ENV PYTHONUNBUFFERED=1
