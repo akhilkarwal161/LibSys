@@ -33,7 +33,8 @@ ENV CSRF_TRUSTED_ORIGINS=*
 
 # Replace with your production database URL from Cloud SQL
 # You should get this value from your GCP environment, not hard-code it.
-#ENV DATABASE_URL=
+ENV DATABASE_URL=mysql://root:Mahesh@2018@34.38.41.15:3306/libsys_db	
+
 
 # Run collectstatic to gather all static files for WhiteNoise to serve
 RUN python manage.py collectstatic --noinput

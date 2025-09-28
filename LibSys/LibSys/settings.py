@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework',
     'django_filters',
-    # 'storages' has been removed until the required packages are installed
+    # Add django-storages for cloud storage
+    'storages',
 ]
 
 if DEBUG:
@@ -93,22 +94,12 @@ WSGI_APPLICATION = 'LibSys.wsgi.application'
 
 # Database
 # Use SQLite for local development and Cloud SQL in production
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    # Use dj_database_url to parse the DATABASE_URL environment variable.
-    # Provide a default SQLite URL to prevent errors during the build process.
-    DATABASES = {
-        'default': dj_database_url.parse(
-            os.environ.get('DATABASE_URL', 'sqlite:///' +
-                           str(BASE_DIR / 'db.sqlite3'))
-        )
-    }
+DATABASES = {
+    'default': dj_database_url.parse(
+        os.environ.get('DATABASE_URL', 'sqlite:///' +
+                       str(BASE_DIR / 'db.sqlite3'))
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -165,12 +156,26 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+if DEBUG:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# The new, unified storage configuration for both static and media files.
 STORAGES = {
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
 }
 
-# The media files configuration for Google Cloud Storage has been removed
-# until the 'storages' packages are installed.
+# In production, replace the default storage backend with GCS
+if not DEBUG:
+    STORAGES["default"]["BACKEND"] = "storages.backends.gcloud.GoogleCloudStorage"
+    GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
+    GS_PROJECT_ID = os.environ.get('GS_PROJECT_ID')
+    GS_DEFAULT_ACL = 'publicRead'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
