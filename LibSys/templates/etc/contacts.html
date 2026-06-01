@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <style>
@@ -76,8 +77,8 @@
           }
     </style>
 <head>
-    <a href="{% url 'home' %}" class="floating-button">Go Back</a>
   <title>Contact Us</title>
+  <script src="{% static 'js/preload.js' %}" defer></script>
 </head>
 <body>
   <header>
@@ -88,7 +89,7 @@
   <section>
     <h2>Get in Touch</h2>
     <p>We'd love to hear from you! Fill out the form below to send us a message.</p>
-    <form action="/contact/submit" method="post">
+    <form id="contactForm" action="/contact/submit" method="post">
       {% csrf_token %}
       <label for="name">Your Name:</label>
       <input type="text" name="name" id="name" required>
@@ -102,6 +103,14 @@
       <button type="submit">Send Message</button>
     </form>
   </section>
+
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("OOG BOOG! Message sent successfully to Caveman Chief! Thank you!");
+        e.target.reset();
+    });
+  </script>
 
   <footer>
     <p>&copy; 2024 Library Management System</p>

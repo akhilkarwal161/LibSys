@@ -1,78 +1,74 @@
-
 {% load static %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
-{% block content %}
-<style>
-    body {
-        overflow:auto;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-table, th, td {
-        border: 1px solid #ddd;
-        background-color: #f9f9f9;
-    }
-
-th, td {
-        padding: 10px;
-        text-align: left;
-        background-color: #f9f9f9;
-    }
-
-th {
-        background-color: #336095;
-        color: white;
-    }
-section,h3 {
-        padding: 20px;
-        background-color: #336095;
-        margin: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        position: relative;
-        top: 50%;
-           }
-.floating-button2 {
-            position: fixed;
-            top: 10px; /* Adjust distance from top */
-            left:  10px; /* Adjust distance from right */
-            background-color:rgb(234, 82, 31); /* Blue */
-            color: white;
-            padding: 15px 20px;
-            border-radius: 70%; /* Make it round */
-            text-decoration: none;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
-            z-index: 1000; /* Ensure it's on top */
-          }
-.floating-button3 {
-            position: fixed;
-            top: 100px; /* Adjust distance from top */
-            right:  10px; /* Adjust distance from right */
-            background-color:rgb(234, 82, 31); /* Blue */
-            color: white;
-            padding: 15px 20px;
-            border-radius: 70%; /* Make it round */
-            text-decoration: none;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
-            z-index: 1000; /* Ensure it's on top */
-          }
-          
-
-</style>
-<div>
+<!DOCTYPE html>
+<html>
 <head>
+    <title>Library Dashboard - LibSys</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'js/preload.js' %}" defer></script>
+    <style>
+        body {
+            overflow: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            background-color: #f9f9f9;
+        }
+        th {
+            background-color: #336095;
+            color: white;
+        }
+        section, h3 {
+            padding: 20px;
+            background-color: #336095;
+            margin: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            top: 50%;
+        }
+        .floating-button2 {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgb(234, 82, 31);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%;
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        .floating-button3 {
+            position: fixed;
+            top: 100px;
+            right: 10px;
+            background-color: rgb(234, 82, 31);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 70%;
+            text-decoration: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
     {% if request.user.is_superuser %}
         <a class="floating-button" href="{% url 'manage_books' %}">Manage Books</a>
     {% endif %}
     <a class='floating-button2' href="{% url 'issued_books' %}">Issueance History</a>
-</head>
-</div>
-<br><br>
-<div>
+    <br><br>
+    <div>
 <body>
   <div class="container">
     <h1 style="text-align: center; color: #336095; background-color: #ddd; border-radius: 50%;">Hello, {{ request.user|title }}</h1>
@@ -152,6 +148,4 @@ section,h3 {
     
   </div>
 </body>
-</div>
-
-{% endblock content %}
+</html>

@@ -13,10 +13,6 @@ class BookCreate(generics.ListCreateAPIView):
     queryset = Books.objects.all()
     serializer_class = BookSerializer
 
-    def delete(self, request, *args, **kwargs):
-        Books.objects.filter(pk=kwargs['pk']).delete()
-        return self.destroy(request, *args, **kwargs)
-
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Books.objects.all()
     serializer_class = BookSerializer
@@ -38,9 +34,6 @@ class IssuedCreate(generics.ListCreateAPIView):
     queryset = Issued.objects.all()
     serializer_class = IssuedSerializer
 
-    def delete(self, request, *args, **kwargs):
-        Issued.objects.filter(pk=kwargs['pk']).delete()
-        return self.destroy(request, *args, **kwargs)
 
 class IssuedDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Issued.objects.all()

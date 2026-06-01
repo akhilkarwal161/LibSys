@@ -47,34 +47,36 @@ class Registerpage(FormView):
             login(self.request, user)
         return super(Registerpage, self).form_valid(form)
 
-def dashboard(request):
-    books = Books.objects.all()
-    issued_books = Issued.objects.all()
-    available_books = []
+from django.db import transaction
+from django.db.models import Count, Q
+
+def dashboard(request: HttpRequest) -> HttpResponse:
+    books = Books.objects.annotate(
+        active_issues=Count('issued', filter=Q(issued__submit=False))
+    )
     for book in books:
-        issued_count = Issued.objects.filter(book=book).exclude(submit=True).count()
-        book.available_quantity = book.quantity - issued_count
-        available_books.append(book)
-    
-    return render(request, 'user/dashboard.html', {'books': books, 'issued_books': issued_books, 'available_books': available_books})
+        book.available_quantity = book.quantity - book.active_issues
+        
+    issued_books = Issued.objects.select_related('book', 'user').all()
+    return render(request, 'user/dashboard.html', {'books': books, 'issued_books': issued_books, 'available_books': books})
 
 
-def csrf_failure(request, reason=""):
+def csrf_failure(request: HttpRequest, reason: str = "") -> HttpResponse:
     return render(request, 'home.html', {'reason': reason})
 
-def is_superuser(user):
+def is_superuser(user: User) -> bool:
     return user.is_superuser
 
 @login_required
 @user_passes_test(is_superuser)
-def manage_books(request):
+def manage_books(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         if 'add_book' in request.POST:
             book_name = request.POST.get('book_name')
-            quantity = int(request.POST.get('quantity'))
+            quantity = int(request.POST.get('quantity') or 0)
             author = request.POST.get('author')
             genre = request.POST.get('genre')
-            fine = int(request.POST.get('fine'))
+            fine = int(request.POST.get('fine') or 0)
 
             try:
                 Books.objects.create(
@@ -89,24 +91,20 @@ def manage_books(request):
                 return render(request, 'user/manage_books.html', {'error': str(e)})
 
         elif 'remove_book' in request.POST:
-            
             book_id = request.POST.get('book_id')
-
             try:
-                pk = int(book_id)
+                pk = int(book_id or 0)
                 book = Books.objects.get(pk=pk)
                 book.delete()
                 return redirect('manage_books')
             except Books.DoesNotExist:
                 return render(request, 'user/manage_books.html', {'error': 'Book not found.'})
 
-    books = Books.objects.all()
-    issued_books = Issued.objects.all()
-    available_books = []
+    books = Books.objects.annotate(
+        active_issues=Count('issued', filter=Q(issued__submit=False))
+    )
     for book in books:
-        issued_count = Issued.objects.filter(book=book).exclude(submit=True).count()
-        book.available_quantity = book.quantity - issued_count
-        available_books.append(book)
+        book.available_quantity = book.quantity - book.active_issues
 
     message = request.session.get('message')
     if message:
@@ -114,7 +112,7 @@ def manage_books(request):
 
     selected_book = request.GET.get('book', 'all')
     selected_user = request.GET.get('user', 'all')
-    issued_books = Issued.objects.all()  # All books initially
+    issued_books = Issued.objects.select_related('book', 'user').all()
 
     if selected_book != 'all':
         issued_books = issued_books.filter(book=selected_book)
@@ -122,48 +120,46 @@ def manage_books(request):
     if selected_user != 'all':
         issued_books = issued_books.filter(user=selected_user)
 
-    return render(request, 'user/manage_books.html', {'books': books, 'issued_books': issued_books, 'available_books': available_books,'issued_books': issued_books, 'all_books': Books.objects.all(), 'all_users': User.objects.all()})
+    return render(request, 'user/manage_books.html', {
+        'books': books, 
+        'issued_books': issued_books, 
+        'available_books': books,
+        'all_books': Books.objects.all(), 
+        'all_users': User.objects.all()
+    })
 
 class BookUpdateView(UpdateView):
     model = Books
     fields = ['book_name', 'quantity', 'author', 'genre', 'fine']
     template_name = 'user/edit_book.html'
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse('manage_books')
 
-def BookIssue(request, pk):
-    book = Books.objects.get(pk=pk)
+@login_required
+@transaction.atomic
+def BookIssue(request: HttpRequest, pk: int) -> HttpResponse:
+    book = Books.objects.select_for_update().get(pk=pk)
+    active_issues = Issued.objects.filter(book=book, submit=False).count()
+    available_quantity = book.quantity - active_issues
 
     if request.method == 'POST':
-
-        issued_count = Issued.objects.filter(book=book).exclude(submit=True).count()
-        available_quantity = book.quantity - issued_count
-        if book.available_quantity > 0: #check if there are available books
+        if available_quantity > 0:
             user = request.user
-            
             Issued.objects.create(user=user, book=book)
-            book.available_quantity -= 1
+            book.available_quantity = available_quantity - 1
             book.save()
-
             return redirect('dashboard')
-        
         else:
-            messages.error(request,"Book not available to issue")
+            messages.error(request, "Book not available to issue")
             return redirect('dashboard')
-        
-        
-
-    # Calculate available quantity for this specific book
-    issued_count = Issued.objects.filter(book=book).exclude(submit=True).count()
-    available_quantity = book.quantity - issued_count
 
     return render(request, 'user/issue_book.html', {'book': book, 'available_quantity': available_quantity})  
 
-def All_Books(request):
+def All_Books(request: HttpRequest) -> HttpResponse:
     selected_book = request.GET.get('book', 'all')
     selected_user = request.GET.get('user', 'all')
-    issued_books = Issued.objects.all()  # All books initially
+    issued_books = Issued.objects.select_related('book', 'user').all()
 
     if selected_book != 'all':
         issued_books = issued_books.filter(book=selected_book)
@@ -172,34 +168,37 @@ def All_Books(request):
         issued_books = issued_books.filter(user=selected_user)
 
     context = {'issued_books': issued_books, 'all_books': Books.objects.all(), 'all_users': User.objects.all()}
-    return render(request, 'manage_books.html', context) 
+    return render(request, 'user/manage_books.html', context) 
+
 @login_required
-def issued_books(request):
-    issued_books = Issued.objects.filter(user=request.user)
+def issued_books(request: HttpRequest) -> HttpResponse:
+    issued_books = Issued.objects.select_related('book').filter(user=request.user)
     return render(request, 'user/issued_books.html', {'issued_books': issued_books})    
 
-def BookReturn(request, pk):
-  issued_book = Issued.objects.get(pk=pk)  # Get the issued book object
+@login_required
+@transaction.atomic
+def BookReturn(request: HttpRequest, pk: int) -> HttpResponse:
+    issued_book = Issued.objects.select_for_update().select_related('book').get(pk=pk)
 
-  if request.method == 'POST':
-    # Mark the issued book as returned (set submit flag to True)
-    issued_book.submit = True
-    issued_book.save()
+    if request.method == 'POST':
+        if not issued_book.submit:
+            issued_book.submit = True
+            issued_book.save()
 
-    # Update the book's available quantity
-    book = issued_book.book  # Get the actual Book object
-    book.available_quantity += 1
-    book.save()
+            book = Books.objects.select_for_update().get(pk=issued_book.book.pk)
+            # Recompute and update
+            active_issues = Issued.objects.filter(book=book, submit=False).count()
+            book.available_quantity = book.quantity - active_issues
+            book.save()
 
-    messages.success(request, 'Book returned successfully!')
-    return redirect('dashboard')
+        messages.success(request, 'Book returned successfully!')
+        return redirect('dashboard')
 
-  # Calculate available quantity for this specific book (optional)
-  issued_count = Issued.objects.filter(book=issued_book.book).exclude(submit=True).count()
-  available_quantity = issued_book.book.quantity - issued_count 
+    active_issues = Issued.objects.filter(book=issued_book.book, submit=False).count()
+    available_quantity = issued_book.book.quantity - active_issues 
 
-  context = {'issued_book': issued_book, 'available_quantity': available_quantity}
-  return render(request, 'user/return_book.html', context)
+    context = {'issued_book': issued_book, 'available_quantity': available_quantity}
+    return render(request, 'user/return_book.html', context)
 
 def issued_books_view(request):
     selected_book = request.GET.get('book', 'all')

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <style>
@@ -76,8 +77,8 @@
           }
     </style>
 <head>
-    <a href="{% url 'home' %}" class="floating-button">Go Back</a>
   <title>Library Members</title>
+  <script src="{% static 'js/preload.js' %}" defer></script>
 </head>
 <body>
   <header>
