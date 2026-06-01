@@ -57,7 +57,7 @@ def run_comprehensive_playwright_scenarios():
             # -------------------------------------------------------------
             print("[TEST 1] Testing Public Interface Connections...")
             page.goto(base_url)
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("domcontentloaded")
             print(f"  -> Homepage Title: '{page.title()}'")
             if "Library Management System" not in page.title():
                 raise AssertionError("Homepage title mismatch!")
