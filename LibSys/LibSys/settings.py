@@ -60,6 +60,7 @@ if DEBUG:
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'Home.middleware.ServerTimingMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'Home.middleware.RateLimitMiddleware',
     'django.middleware.gzip.GZipMiddleware',
@@ -72,7 +73,7 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    MIDDLEWARE.insert(4, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    MIDDLEWARE.insert(5, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = 'LibSys.urls'
 

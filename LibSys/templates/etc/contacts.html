@@ -79,6 +79,15 @@
 <head>
   <title>Contact Us</title>
   <script src="{% static 'js/preload.js' %}" defer></script>
+  <script>
+      if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+              navigator.serviceWorker.register('{% static "js/sw.js" %}')
+                  .then(reg => console.log('[SW] Service Worker Registered Successfully!'))
+                  .catch(err => console.error('[SW] Service Worker Registration Failed:', err));
+          });
+      }
+  </script>
 </head>
 <body>
   <header>

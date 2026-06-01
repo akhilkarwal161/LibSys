@@ -3,8 +3,16 @@
 <html>
 <head>
     <title>Library Dashboard - LibSys</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
     <script src="{% static 'js/preload.js' %}" defer></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{% static "js/sw.js" %}')
+                    .then(reg => console.log('[SW] Service Worker Registered Successfully!'))
+                    .catch(err => console.error('[SW] Service Worker Registration Failed:', err));
+            });
+        }
+    </script>
     <style>
         body {
             overflow: auto;

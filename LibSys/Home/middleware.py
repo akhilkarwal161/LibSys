@@ -44,3 +44,35 @@ class RateLimitMiddleware:
         cache.set(cache_key, history, 60)
 
         return self.get_response(request)
+
+
+from django.db import connection
+
+class ServerTimingMiddleware:
+    """
+    OOG BOOG! Server-Timing middleware to instrument backend and database durations!
+    Exposes metrics directly to browser developer tools.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        start_time = time.time()
+        
+        # Capture database queries pre-execution
+        db_start_time = sum(float(q['time']) for q in connection.queries)
+        
+        response = self.get_response(request)
+        
+        # Calculate durations
+        total_duration_ms = (time.time() - start_time) * 1000
+        db_end_time = sum(float(q['time']) for q in connection.queries)
+        db_duration_ms = (db_end_time - db_start_time) * 1000
+        
+        # Exclude static/media requests to keep headers compact
+        if not request.path.startswith('/static/') and not request.path.startswith('/media/'):
+            server_timing_value = f"db;dur={db_duration_ms:.2f}, total;dur={total_duration_ms:.2f}"
+            response['Server-Timing'] = server_timing_value
+
+        return response
+
