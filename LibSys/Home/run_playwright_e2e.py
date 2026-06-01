@@ -126,7 +126,7 @@ def run_comprehensive_playwright_scenarios():
             content = page.content()
             if "Issue" in content:
                 print("  -> Attempting to issue a book from dashboard listing...")
-                page.click("text=Issue >> nth=0")
+                page.click("a[href*='/issue/'] >> nth=0")
                 time.sleep(1)
                 
                 # Check issue confirm details
