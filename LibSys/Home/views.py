@@ -26,20 +26,20 @@ def Home(request):
     return render(request, 'home.html')
 
 class CustomLoginView(LoginView):
-    on_success_url = reverse_lazy('user:dashboard')
+    success_url = reverse_lazy('dashboard')
     template_name = 'auth/login.html'
     fields = '__all__'
     redirect_authenticated_user = True
 
 class CustomlogoutView(LogoutView):
-    success_url = reverse_lazy('Home:login')
+    success_url = reverse_lazy('login')
 
 
 class Registerpage(FormView):
     template_name = 'auth/register.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
-    on_success_url = reverse_lazy('user:dashboard')
+    success_url = reverse_lazy('dashboard')
 
     def form_valid(self, form):
         user = form.save()
