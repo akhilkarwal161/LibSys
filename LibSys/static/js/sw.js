@@ -2,7 +2,7 @@
  * LibSys Service Worker - Aggressive Caching & Offline Capabilities
  * OOG BOOG! CAVEMAN SERVICE WORKER CACHE ALL THE DATA FOR INSTANT LOAD TIMES!
  */
-const CACHE_NAME = 'libsys-cache-v1';
+const CACHE_NAME = 'libsys-cache-v2';
 const ASSETS_TO_CACHE = [
     '/',
     '/stock/',
@@ -58,7 +58,8 @@ self.addEventListener('fetch', (event) => {
     }
 
     // Network-First strategy for HTML pages (books, members, contacts, home)
-    if (request.headers.get('accept').includes('text/html')) {
+    const acceptHeader = request.headers.get('accept');
+    if (acceptHeader && acceptHeader.includes('text/html')) {
         event.respondWith(
             fetch(request)
                 .then((response) => {
