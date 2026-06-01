@@ -73,7 +73,7 @@ def run_live_playwright_scenarios():
             password_inputs.nth(1).fill(test_password)
             
             # Submit registration
-            page.click("input[type='submit']")
+            page.click("[type='submit']")
             time.sleep(3)
             
             # Verify login / redirect onto dashboard
@@ -95,7 +95,7 @@ def run_live_playwright_scenarios():
                 time.sleep(2)
                 
                 # Confirm checkout
-                page.click("input[type='submit']")
+                page.click("[type='submit']")
                 time.sleep(3)
                 
                 # Verify checkout reflected on dashboard
@@ -107,7 +107,7 @@ def run_live_playwright_scenarios():
                 print("  -> Attempting to return the issued book...")
                 page.click("text=return >> nth=0")
                 time.sleep(2)
-                page.click("input[type='submit']")
+                page.click("[type='submit']")
                 time.sleep(3)
                 print("  -> Book returned successfully on Live Domain!")
             else:

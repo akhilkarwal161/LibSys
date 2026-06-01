@@ -107,7 +107,7 @@ def run_comprehensive_playwright_scenarios():
             password_inputs.nth(1).fill(test_password)
             
             # Submit registration
-            page.click("input[type='submit']")
+            page.click("[type='submit']")
             time.sleep(2)
             
             # Verify login / redirect onto dashboard
@@ -135,7 +135,7 @@ def run_comprehensive_playwright_scenarios():
                     raise AssertionError("Did not load book issue confirmation page!")
                 
                 # Confirm checkout
-                page.click("input[type='submit']")
+                page.click("[type='submit']")
                 time.sleep(2)
                 
                 # Verify checkout reflected on dashboard
@@ -147,7 +147,7 @@ def run_comprehensive_playwright_scenarios():
                 print("  -> Attempting to return the issued book...")
                 page.click("text=return >> nth=0")
                 time.sleep(1)
-                page.click("input[type='submit']")
+                page.click("[type='submit']")
                 time.sleep(2)
                 print("  -> Book returned successfully!")
             else:
