@@ -61,6 +61,7 @@ if DEBUG:
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'Home.middleware.RateLimitMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,7 +72,7 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    MIDDLEWARE.insert(3, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    MIDDLEWARE.insert(4, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = 'LibSys.urls'
 
@@ -95,15 +96,11 @@ WSGI_APPLICATION = 'LibSys.wsgi.application'
 
 # Database
 # Use SQLite for local development and Cloud SQL in production
-DATABASES = {                                                                                                                                                                                                   │
-     'default': dj_database_url.parse(                                                                                                                                                                           │
-         os.environ.get('DATABASE_URL', 'sqlite:///' +                                                                                                                                                           │
-                       str(BASE_DIR / 'db.sqlite3'))                                                                                                                                                            │
-                       str(BASE_DIR / 'db.sqlite3')),                                                                                                                                                           │
-         'USER': 'managedb',                                                                                                                                                                                     │
-        'PASSWORD': 'Mahesh@2018'                                                                                                                                                                               │
-     )                                                                                                                                                                                                           │
- } 
+DATABASES = {
+    'default': dj_database_url.parse(
+        os.environ.get('DATABASE_URL', 'sqlite:///' + str(BASE_DIR / 'db.sqlite3'))
+    )
+} 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Too Many Requests - LibSys</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-color: #ff5227;
+            --text-color: #f3f4f6;
+            --muted-text: #9ca3af;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Ambient Glow Background */
+        .ambient-glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 82, 39, 0.15) 0%, rgba(0,0,0,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+            animation: pulse 8s infinite alternate ease-in-out;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 4rem 3rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 480px;
+            width: 90%;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0 0 1rem;
+            background: linear-gradient(135deg, #ff8c69 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 1rem;
+        }
+
+        p {
+            color: var(--muted-text);
+            line-height: 1.6;
+            margin: 0 0 2rem;
+        }
+
+        /* Circular Timer Ring */
+        .timer-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .timer-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .timer-svg circle {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+        }
+
+        .timer-bg {
+            stroke: rgba(255, 255, 255, 0.05);
+        }
+
+        .timer-bar {
+            stroke: var(--accent-color);
+            stroke-dasharray: 402; /* 2 * PI * r (r=64) => 402.12 */
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .countdown-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .unit {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+            display: block;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: -4px;
+        }
+
+        .shield-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            animation: wobble 3s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1.2; }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow"></div>
+    <div class="container">
+        <div class="shield-icon">🛡️</div>
+        <h1>429</h1>
+        <h2>Too Many Requests</h2>
+        <p>OOG BOOG! Your IP is sending requests too fast! To safeguard LibSys from bot hordes, access is cooling down.</p>
+
+        <div class="timer-wrapper">
+            <svg class="timer-svg" viewBox="0 0 136 136">
+                <circle class="timer-bg" cx="68" cy="68" r="64"></circle>
+                <circle id="progressCircle" class="timer-bar" cx="68" cy="68" r="64"></circle>
+            </svg>
+            <div class="countdown-text">
+                <span id="countdown">60</span>
+                <span class="unit">sec</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const initialSeconds = 60;
+        let secondsLeft = initialSeconds;
+        const countdownEl = document.getElementById('countdown');
+        const circle = document.getElementById('progressCircle');
+        const radius = 64;
+        const circumference = 2 * Math.PI * radius;
+
+        circle.style.strokeDasharray = circumference;
+
+        const updateTimer = () => {
+            countdownEl.textContent = secondsLeft;
+            
+            // Calculate progress offset
+            const progress = secondsLeft / initialSeconds;
+            const offset = circumference * (1 - progress);
+            circle.style.strokeDashoffset = offset;
+
+            if (secondsLeft <= 0) {
+                clearInterval(interval);
+                window.location.reload();
+            }
+            secondsLeft--;
+        };
+
+        updateTimer();
+        const interval = setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
