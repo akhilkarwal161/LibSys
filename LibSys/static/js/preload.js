@@ -2,7 +2,7 @@
  * Aggressive Link Preloading, connection speed checking, and Performance Observer instrumentation.
  * OOG BOOG! CAVEMAN ENGINEER MAKE SITE SPEEDY LIKE CHEETAH!
  */
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
     const preloaded = new Set();
 
     // 1. DYNAMIC CONNECTION ADJUSTMENT
