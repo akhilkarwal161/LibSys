@@ -8,6 +8,7 @@ Directory structure:
     ├── CURRENT_CONTEXT.md
     ├── docker-compose.yml
     ├── Dockerfile
+    ├── prompt.md
     ├── requirements-dev.txt
     ├── requirements.txt
     ├── WHAT_HAVE_WE_ACHIEVED.md
@@ -359,6 +360,12 @@ RUN python manage.py collectstatic --noinput
 # Run the Gunicorn server
 # Cloud Run automatically sets the PORT environment variable.
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "LibSys.wsgi"]
+
+
+================================================
+FILE: prompt.md
+================================================
+Error reading file with 'cp1252': 'charmap' codec can't decode byte 0x9d in position 13705: character maps to <undefined>
 
 
 ================================================
