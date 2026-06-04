@@ -1,36 +1,36 @@
 
-# Distribution / packaging
-*.so
-var/
-.eggs/
+*.pyc
 *.pyo
 .installed.cfg
-*.egg
-#data
-# Environment variables
-.sqlite3
-eggs/
-.Python
-*.egg-info/
-# C extensions
-! .env.example
-*.pyc
-.venv/
+lib/
+node_modules/
 # Byte-compiled / optimized / DLL files
 venv/
-dist/
-__pycache__/
-downloads/
-lib/
-parts/
-build/
-.env.*
-sdist/
-node_modules/
-*.pyd
-# Virtual Environment
-.env
+*.so
+#data
+.Python
 .DS_Store
-wheels/
 lib64/
+# Virtual Environment
+*.egg-info/
+.sqlite3
+sdist/
 develop-eggs/
+.env.*
+*.pyd
+wheels/
+downloads/
+eggs/
+# Distribution / packaging
+build/
+.eggs/
+*.egg
+# Environment variables
+var/
+dist/
+.venv/
+.env
+parts/
+__pycache__/
+# C extensions
+! .env.example
