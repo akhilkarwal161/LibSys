@@ -57,10 +57,10 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v6
         with:
-          sbom: ${{ github.event_name != 'pull_request' && env.REGISTRY_USER != '' }}
-          provenance: ${{ github.event_name != 'pull_request' && env.REGISTRY_USER != '' }}
-          push: ${{ github.event_name != 'pull_request' && env.REGISTRY_USER != '' }}
-          load: ${{ github.event_name == 'pull_request' || env.REGISTRY_USER == '' }}
+          sbom: false
+          provenance: false
+          push: false
+          load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

@@ -6,4 +6,5 @@ django-debug-toolbar
 pytest
 docker
 gcloud
-locust
+locust
+playwright
