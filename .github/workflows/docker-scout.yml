@@ -14,6 +14,11 @@ env:
   # Image repository, without hostname and tag
   IMAGE_NAME: ${{ github.repository }}
   SHA: ${{ github.event.pull_request.head.sha || github.event.after }}
+  # Define secrets as env vars so they can be safely checked in `if` conditionals
+  REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+  REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
 
 jobs:
   build:
@@ -24,12 +29,12 @@ jobs:
     steps:
       # Authenticate to the container registry
       - name: Authenticate to registry ${{ env.REGISTRY }}
-        if: ${{ secrets.REGISTRY_USER }}
+        if: ${{ env.REGISTRY_USER != '' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_TOKEN }}
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3
@@ -52,10 +57,10 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v6
         with:
-          sbom: ${{ github.event_name != 'pull_request' && secrets.REGISTRY_USER }}
-          provenance: ${{ github.event_name != 'pull_request' && secrets.REGISTRY_USER }}
-          push: ${{ github.event_name != 'pull_request' && secrets.REGISTRY_USER }}
-          load: ${{ github.event_name == 'pull_request' || !secrets.REGISTRY_USER }}
+          sbom: ${{ github.event_name != 'pull_request' && env.REGISTRY_USER != '' }}
+          provenance: ${{ github.event_name != 'pull_request' && env.REGISTRY_USER != '' }}
+          push: ${{ github.event_name != 'pull_request' && env.REGISTRY_USER != '' }}
+          load: ${{ github.event_name == 'pull_request' || env.REGISTRY_USER == '' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
@@ -63,11 +68,11 @@ jobs:
 
       # Authenticate to Docker (if you didn't before)
       - name: Authenticate to Docker
-        if: ${{ secrets.DOCKER_USER }}
+        if: ${{ env.DOCKER_USER != '' }}
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PAT }}
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ env.DOCKER_PAT }}
 
       # Compare the image built in the pull request with the one in production
       - name: Docker Scout
